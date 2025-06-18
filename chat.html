@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <style>
+    #chat-box { border:1px solid #ccc; height:300px; overflow-y:scroll; padding:10px; margin-bottom:10px; }
+    .msg { margin-bottom: 8px; }
+    .meta { color: #888; font-size: 0.8em; }
+  </style>
+  <script>
+    // Only accessible if gate_passed
+    if (sessionStorage.getItem("gate_passed") !== "yes") {
+      window.location.href = "index.html";
+    }
+
+    function setUsername(event) {
+      event.preventDefault();
+      const uname = document.getElementById('username').value.trim();
+      const msg = document.getElementById('user-message');
+      if (uname.length < 1) {
+        msg.textContent = "Username is required.";
+        return;
+      }
+      sessionStorage.setItem("chat_username", uname);
+      document.getElementById('username-modal').style.display = "none";
+      document.getElementById('main-chat').style.display = "block";
+      document.getElementById('username-label').textContent = uname;
+      fetchMessages();
+    }
+
+    window.onload = () => {
+      if (!sessionStorage.getItem("chat_username")) {
+        document.getElementById('main-chat').style.display = "none";
+        document.getElementById('username-modal').style.display = "block";
+      } else {
+        document.getElementById('main-chat').style.display = "block";
+        document.getElementById('username-modal').style.display = "none";
+        document.getElementById('username-label').textContent = sessionStorage.getItem("chat_username");
+        fetchMessages();
+      }
+      setInterval(fetchMessages, 2000);
+    };
+
+    let lastLen = 0;
+    function appendMessage(msg) {
+      const box = document.getElementById('chat-box');
+      const el = document.createElement('div');
+      el.className = "msg";
+      el.innerHTML = `<span class="meta">[${new Date(msg.timestamp).toLocaleTimeString()}] <b>${msg.username}:</b></span> ${msg.message}`;
+      box.appendChild(el);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function fetchMessages() {
+      const resp = await fetch('/api/messages');
+      const msgs = await resp.json();
+      const box = document.getElementById('chat-box');
+      if (msgs.length !== lastLen) {
+        box.innerHTML = "";
+        msgs.forEach(appendMessage);
+        lastLen = msgs.length;
+      }
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+      const message = document.getElementById('msg-input').value.trim();
+      if (!message) return;
+      const username = sessionStorage.getItem("chat_username");
+      await fetch('/api/messages', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, message })
+      });
+      document.getElementById('msg-input').value = "";
+      fetchMessages();
+    }
+
+    function logout() {
+      sessionStorage.removeItem("gate_passed");
+      sessionStorage.removeItem("chat_username");
+      window.location.href = "index.html";
+    }
+  </script>
+</head>
+<body>
+  <!-- Username Modal -->
+  <div id="username-modal" style="display:none;">
+    <h2>Enter Username to Chat</h2>
+    <form onsubmit="setUsername(event)">
+      <input type="text" id="username" placeholder="Your username" required>
+      <button type="submit">Enter</button>
+    </form>
+    <p id="user-message" style="color:red;"></p>
+  </div>
+  <!-- Main Chat -->
+  <div id="main-chat" style="display:none;">
+    <h2>Google chat but scuffed</h2>
+    <p>Use online names like remoraze that you know people by.</p>
+    <div>
+      Logged in as <b id="username-label"></b>
+      <button onclick="logout()">Logout</button>
+    </div>
+    <div id="chat-box"></div>
+    <form onsubmit="sendMessage(event)">
+      <input type="text" id="msg-input" autocomplete="off" placeholder="Type your message..." required style="width:70%;">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</body>
+</html>

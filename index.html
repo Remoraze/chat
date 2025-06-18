@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>You Shall Not Pass!</title>
+  <script>
+    // If already passed, redirect to chat.html
+    if (sessionStorage.getItem("gate_passed") === "yes") {
+      window.location.href = "chat.html";
+    }
+    async function checkCode(event) {
+      event.preventDefault();
+      const codeInput = document.getElementById('code').value.trim();
+      const message = document.getElementById('message');
+      try {
+        const response = await fetch('/api/check-pass', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: codeInput })
+        });
+        const data = await response.json();
+        if (data.success) {
+          sessionStorage.setItem("gate_passed", "yes");
+          window.location.href = "chat.html";
+        } else {
+          message.textContent = 'You shall not pass! (Incorrect code)';
+        }
+      } catch (e) {
+        message.textContent = 'Server error.';
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>You Shall Not Pass!</h1>
+  <p>Enter the code, and no you will not find it in the bare html im not dumb</p>
+   <p>If you are ICT there is nothing here whatsoever.</p>
+  <form onsubmit="checkCode(event)">
+    <input type="password" id="code" required>
+    <button type="submit">Enter</button>
+  </form>
+  <p id="message" style="color:red;"></p>
+</body>
+</html>
