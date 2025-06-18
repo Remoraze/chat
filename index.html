@@ -2,15 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>You Shall Not Pass!</title>
+  <title>How to Write a Great Essay | StudyCraft Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f9f9;
+      color: #2c3e50;
+    }
+
+    header {
+      background-color: #008080;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+    }
+
+    h2 {
+      color: #007070;
+      margin-top: 2rem;
+    }
+
+    blockquote {
+      border-left: 4px solid #008080;
+      padding-left: 1rem;
+      color: #555;
+      font-style: italic;
+      margin: 1.5rem 0;
+    }
+
+    .author {
+      margin-top: 2rem;
+      font-style: italic;
+      color: #666;
+    }
+
+    #subscribe-section {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    #subscribe-section input, #subscribe-section button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    #message {
+      color: red;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+  </style>
   <script>
-    // If already passed, redirect to chat.html
     if (sessionStorage.getItem("gate_passed") === "yes") {
       window.location.href = "chat.html";
     }
-    async function checkCode(event) {
+
+    async function subscribe(event) {
       event.preventDefault();
-      const codeInput = document.getElementById('code').value.trim();
+      const codeInput = document.getElementById('email').value.trim();
       const message = document.getElementById('message');
       try {
         const response = await fetch('/api/check-pass', {
@@ -23,22 +104,61 @@
           sessionStorage.setItem("gate_passed", "yes");
           window.location.href = "chat.html";
         } else {
-          message.textContent = 'You shall not pass! (Incorrect code)';
+          message.textContent = 'Subscription failed. Please try again.';
         }
-      } catch (e) {
-        message.textContent = 'Server error.';
+      } catch {
+        message.textContent = 'Error connecting to server.';
       }
     }
   </script>
 </head>
 <body>
-  <h1>You Shall Not Pass!</h1>
-  <p>Enter the code, and no you will not find it in the bare html im not dumb</p>
-   <p>If you are ICT there is nothing here whatsoever.</p>
-  <form onsubmit="checkCode(event)">
-    <input type="password" id="code" required>
-    <button type="submit">Enter</button>
-  </form>
-  <p id="message" style="color:red;"></p>
+
+<header>
+  <h1>How to Write a Great Essay</h1>
+  <p>By The Alpha Oil Executive | StudyCraft Blog</p>
+</header>
+
+<main class="container">
+  <p>Essay writing can be stressful, especially when the topic feels overwhelming or when you're not sure where to begin. But with the right structure and mindset, anyone can craft a compelling and organized essay. This guide walks you through a proven strategy I've personally used throughout high school and university.</p>
+
+  <h2>1. Understand the Prompt</h2>
+  <p>Always break the question down into smaller parts. Highlight the key verbs and make sure you understand what it's really asking before writing anything.</p>
+
+  <h2>2. Use the TEAL Paragraph Method</h2>
+  <ul>
+    <li><strong>T</strong>opic Sentence</li>
+    <li><strong>E</strong>vidence</li>
+    <li><strong>A</strong>nalysis</li>
+    <li><strong>L</strong>ink back to the main argument</li>
+  </ul>
+  <p>This technique keeps your writing clear, persuasive, and on-topic.</p>
+
+  <h2>3. Review and Refine</h2>
+  <p>Leave time to edit! A good essay is never written in one draft. I recommend printing it out or reading it aloud to catch flow or grammar issues.</p>
+
+  <blockquote>"You don't write an essay, you sculpt it." — Jamie K.</blockquote>
+
+  <div class="author">
+    Written by Jamie K., Literature & Study Blogger<br>
+    Last updated: June 2025
+  </div>
+
+  <!-- Subscription Form disguised as Gate -->
+  <div id="subscribe-section">
+    <h3>📬 Subscribe to StudyCraft Updates</h3>
+    <p>Want more tips like these? Drop your email to subscribe to our monthly newsletter.</p>
+    <form onsubmit="subscribe(event)">
+      <input type="text" id="email" placeholder="Enter your email..." required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <p id="message"></p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 The Alpha Oil Executive Corporation. 
+</footer>
+
 </body>
 </html>

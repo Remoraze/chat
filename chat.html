@@ -4,12 +4,62 @@
   <meta charset="UTF-8">
   <title>Chat</title>
   <style>
-    #chat-box { border:1px solid #ccc; height:300px; overflow-y:scroll; padding:10px; margin-bottom:10px; }
-    .msg { margin-bottom: 8px; }
-    .meta { color: #888; font-size: 0.8em; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url("/document.png") no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #username-modal, #main-chat {
+      background: rgba(255, 255, 255, 0.94);
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
+    }
+
+    #chat-box {
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: scroll;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .msg {
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      color: #888;
+      font-size: 0.8em;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 8px;
+      font-size: 1em;
+      margin-right: 5px;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
   </style>
   <script>
-    // Only accessible if gate_passed
     if (sessionStorage.getItem("gate_passed") !== "yes") {
       window.location.href = "index.html";
     }
@@ -94,18 +144,37 @@
     </form>
     <p id="user-message" style="color:red;"></p>
   </div>
+
   <!-- Main Chat -->
   <div id="main-chat" style="display:none;">
-    <h2>Google chat but scuffed</h2>
-    <p>Dont switch names or u will be put on a blacklist</p>
+    <h2>Google chat but scuffed V2</h2>
+    <p>Don't impersonate other users or you'll be blacklisted.</p>
     <div>
       Logged in as <b id="username-label"></b>
       <button onclick="logout()">Logout</button>
     </div>
     <div id="chat-box"></div>
     <form onsubmit="sendMessage(event)">
-      <input type="text" id="msg-input" autocomplete="off" placeholder="Type your message..." required style="width:70%;">
+      <input type="text" id="msg-input" autocomplete="off" placeholder="Type your message..." required>
       <button type="submit">Send</button>
+
+<!-- Panic Button -->
+<div style="text-align: center; margin-top: 10px;">
+  <button onclick="window.location.href='https://docs.google.com/document/u/0/'" style="
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  ">
+    🚨 PANIC BUTTON (Go to Real Docs)
+  </button>
+</div>
+
+
     </form>
   </div>
 </body>
